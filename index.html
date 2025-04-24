@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>The Gaslight District Alphabet Decoder</title>
+  <style>
+    @font-face {
+      font-family: 'GaslightFont';
+      src: url('CartoonUniverseTheGaslightDistrict.otf') format('opentype');
+    }
+
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #fff;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      text-align: center; /* Centralizado */
+    }
+
+    .output {
+      font-size: 24px;
+      margin-bottom: 30px;
+      min-height: 40px;
+      border: 2px solid #fff;
+      padding: 10px 15px;
+      width: 100%;
+      max-width: 600px;
+      background-color: #000;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .keyboard {
+      display: grid;
+      grid-template-columns: repeat(10, 1fr);
+      gap: 10px;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    .key {
+      font-family: 'GaslightFont', sans-serif;
+      font-size: 36px; /* Tamanho aumentado */
+      background: #333;
+      color: #fff;
+      border: 1px solid #fff;
+      border-radius: 5px;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .key:hover {
+      background: #555;
+    }
+
+    .key.special {
+      grid-column: span 2;
+    }
+  </style>
+</head>
+<body>
+  <div style="transform: scale(1.5); transform-origin: center;">
+    <h1>THE GASLIGHT DISTRICT DECODER</h1>
+    <div class="output" id="decodedText"></div>
+    <div class="keyboard" id="keyboard"></div>
+  </div>
+
+  <script>
+    const keys = [
+      'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P',
+      'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
+      'Z', 'X', 'C', 'V', 'B', 'N', 'M',
+      '?', "'", ',', '.'
+    ];
+
+    const keyboard = document.getElementById('keyboard');
+    const output = document.getElementById('decodedText');
+
+    keys.forEach(key => {
+      const btn = document.createElement('div');
+      btn.className = 'key';
+      btn.textContent = key;
+      btn.addEventListener('click', () => {
+        output.textContent += key;
+      });
+      keyboard.appendChild(btn);
+    });
+
+    const space = document.createElement('div');
+    space.className = 'key special';
+    space.textContent = ' ';
+    space.addEventListener('click', () => {
+      output.textContent += ' ';
+    });
+    keyboard.appendChild(space);
+
+    const backspace = document.createElement('div');
+    backspace.className = 'key special';
+    backspace.textContent = '<';
+    backspace.addEventListener('click', () => {
+      output.textContent = output.textContent.slice(0, -1);
+    });
+    keyboard.appendChild(backspace);
+  </script>
+</body>
+</html>
