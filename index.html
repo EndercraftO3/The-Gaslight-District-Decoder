@@ -9,53 +9,65 @@
       src: url('CartoonUniverseTheGaslightDistrict.otf') format('opentype');
     }
 
-    body {
+    html, body {
       font-family: sans-serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      min-height: 70vh;
+      width: 95vw;
       margin: 0;
-      padding: 20px;
-      background: #1a1a1a;
-      color: #fff;
+      padding: 30px;
+      background: #ffcc33;
+      color: #330099;
+      overflow-y: auto;
     }
 
     h1 {
-      margin-bottom: 20px;
-      text-align: center; /* Centralizado */
+      margin-bottom: 25px;
+      text-align: center;
+      font-style: italic;
+      font-weight: bold;
+      font-size: 44px; /* Maior título para melhor ajuste */
+      text-transform: uppercase;
+      user-select: none;
+      pointer-events: none;
     }
 
-    .output {
-      font-size: 24px;
-      margin-bottom: 30px;
-      min-height: 40px;
-      border: 2px solid #fff;
-      padding: 10px 15px;
-      width: 100%;
-      max-width: 600px;
-      background-color: #000;
+.output {
+      font-size: 38px;
+      margin-bottom: 35px;
+      border: 2px solid #330099;
+      padding: 15px;
+      width: 735px;
+      min-height: 60px;
+      background-color: #ffcc33;
       word-wrap: break-word;
-      white-space: pre-wrap;
-    }
+      word-break: break-word; /* Garante que palavras grandes também quebrem */
+      white-space: normal; /* Permite quebras automáticas de linha */
+      font-family: sans-serif;
+      display: flex;
+      align-items: center; /* Centraliza verticalmente */
+}
+
 
     .keyboard {
       display: grid;
       grid-template-columns: repeat(10, 1fr);
-      gap: 10px;
-      max-width: 600px;
-      width: 100%;
+      gap: 14px;
+      width: 750px; /* Aumentado para melhor ajuste */
+      justify-content: center;
     }
 
     .key {
       font-family: 'GaslightFont', sans-serif;
-      font-size: 36px; /* Tamanho aumentado */
-      background: #333;
-      color: #fff;
-      border: 1px solid #fff;
-      border-radius: 5px;
-      padding: 15px;
+      font-size: 34px; /* Aumentei o tamanho das teclas */
+      background: #330099;
+      color: #ffcc33;
+      border: 2px solid #ffcc33;
+      border-radius: 6px;
+      padding: 16px;
       text-align: center;
       cursor: pointer;
       user-select: none;
@@ -63,20 +75,43 @@
     }
 
     .key:hover {
-      background: #555;
+      background: #220066;
     }
 
     .key.special {
       grid-column: span 2;
+      font-family: sans-serif;
+      font-size: 30px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      width: 750px;
+      margin-top: 25px;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      font-size: 20px;
+      font-family: sans-serif;
+      color: #330099;
     }
   </style>
 </head>
 <body>
-  <div style="transform: scale(1.5); transform-origin: center;">
-    <h1>THE GASLIGHT DISTRICT DECODER</h1>
-    <div class="output" id="decodedText"></div>
-    <div class="keyboard" id="keyboard"></div>
+  <h1>THE GASLIGHT DISTRICT DECODER</h1>
+  <div class="output" id="decodedText" contenteditable="true"></div>
+  <div class="keyboard" id="keyboard"></div>
+  <div class="controls">
+    <div class="key special" id="toggleFont">Toggle</div>
+    <div class="key special" id="space">Space</div>
+    <div class="key special" id="backspace">Backspace</div>
   </div>
+
+  <div class="footer">Designed by Cartoon Universe.</div>
 
   <script>
     const keys = [
@@ -94,26 +129,45 @@
       btn.className = 'key';
       btn.textContent = key;
       btn.addEventListener('click', () => {
-        output.textContent += key;
+        insertText(key);
       });
       keyboard.appendChild(btn);
     });
 
-    const space = document.createElement('div');
-    space.className = 'key special';
-    space.textContent = ' ';
-    space.addEventListener('click', () => {
-      output.textContent += ' ';
+    document.getElementById('space').addEventListener('click', () => {
+      insertText(' ');
     });
-    keyboard.appendChild(space);
 
-    const backspace = document.createElement('div');
-    backspace.className = 'key special';
-    backspace.textContent = '<';
-    backspace.addEventListener('click', () => {
-      output.textContent = output.textContent.slice(0, -1);
+    document.getElementById('backspace').addEventListener('click', () => {
+      document.execCommand('delete');
     });
-    keyboard.appendChild(backspace);
+
+    document.getElementById('toggleFont').addEventListener('click', () => {
+      output.style.fontFamily = output.style.fontFamily === 'GaslightFont' ? 'sans-serif' : 'GaslightFont';
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.ctrlKey && event.key === 'a') {
+        event.preventDefault();
+        document.execCommand('selectAll');
+      } else if (keys.includes(event.key.toUpperCase())) {
+        event.preventDefault();
+        insertText(event.key);
+      } else if (event.key === ' ') {
+        event.preventDefault();
+        insertText(' ');
+      } else if (event.key === 'Backspace') {
+        event.preventDefault();
+        document.execCommand('delete');
+      } else if (event.key === 'Enter') {
+        event.preventDefault();
+        insertText('\n'); /* Nova linha ao apertar Enter */
+      }
+    });
+
+    function insertText(text) {
+      document.execCommand('insertText', false, text);
+    }
   </script>
 </body>
 </html>
